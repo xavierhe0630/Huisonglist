@@ -6,6 +6,7 @@
 <title>Ry.灰</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root{
     --ink:#242424;
@@ -65,21 +66,37 @@
     color:var(--cream);
     padding:10px 0 22px;
   }
+  .hero .avatar{
+    width:88px;
+    height:88px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(255,255,255,0.75);
+    box-shadow:0 6px 22px rgba(0,0,0,0.45);
+    margin-bottom:14px;
+  }
   .hero h1{
     font-family:var(--display);
     font-weight:600;
     font-size:2.2rem;
-    margin:0 0 8px;
+    margin:0 0 12px;
     letter-spacing:4px;
     text-shadow:0 2px 14px rgba(0,0,0,0.45);
   }
   .hero p{
+    display:inline-block;
     margin:0;
-    font-size:0.9rem;
-    font-weight:300;
-    color:rgba(255,255,255,0.88);
-    line-height:1.7;
+    font-size:0.92rem;
+    font-weight:500;
+    color:#fff;
+    line-height:1.8;
     letter-spacing:0.5px;
+    padding:9px 20px;
+    background:rgba(0,0,0,0.32);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    border-radius:14px;
+    text-shadow:0 1px 6px rgba(0,0,0,0.6);
   }
   .count-pill{
     display:inline-flex;
@@ -229,9 +246,8 @@
     padding:3px 12px;
     border-radius:999px;
     font-size:0.72rem;
-    font-weight:300;
-    border:1px solid rgba(36,36,36,0.2);
-    color:#333;
+    font-weight:400;
+    border:1px solid transparent;
   }
 
   /* ---------- song list ---------- */
@@ -281,15 +297,40 @@
   .song-item .stags span{
     display:inline-block;
     font-size:0.66rem;
-    font-weight:300;
+    font-weight:400;
     padding:2px 9px;
     border-radius:999px;
     margin-left:4px;
-    border:1px solid rgba(36,36,36,0.18);
-    color:#333;
+    border:1px solid transparent;
     white-space:nowrap;
   }
-  .song-item .stags .lang{ border-style:dashed; }
+  .song-item .stags .style2tag{ border-style:dashed; }
+
+  /* ---------- 风格配色 ---------- */
+  .style-pop{ background:rgba(74,125,201,0.16); color:#2d5da8; border-color:rgba(74,125,201,0.35); }
+  .style-melody{ background:rgba(147,112,219,0.18); color:#6a3fb5; border-color:rgba(147,112,219,0.35); }
+  .style-ancient{ background:rgba(196,149,64,0.20); color:#8a6220; border-color:rgba(196,149,64,0.4); }
+  .style-canto{ background:rgba(56,150,140,0.18); color:#1f7268; border-color:rgba(56,150,140,0.35); }
+  .style-novelty{ background:rgba(230,126,34,0.20); color:#b1580a; border-color:rgba(230,126,34,0.4); }
+  .style-sweet{ background:rgba(219,112,157,0.18); color:#b23d6e; border-color:rgba(219,112,157,0.35); }
+  .style-rap{ background:rgba(50,50,50,0.14); color:#2a2a2a; border-color:rgba(50,50,50,0.3); }
+  .style-other{ background:rgba(120,120,120,0.14); color:#555; border-color:rgba(120,120,120,0.3); }
+
+  .chip-dot{
+    display:inline-block;
+    width:8px; height:8px;
+    border-radius:50%;
+    margin-right:6px;
+    vertical-align:middle;
+  }
+  .chip-dot.style-pop{ background:#2d5da8; }
+  .chip-dot.style-melody{ background:#6a3fb5; }
+  .chip-dot.style-ancient{ background:#8a6220; }
+  .chip-dot.style-canto{ background:#1f7268; }
+  .chip-dot.style-novelty{ background:#b1580a; }
+  .chip-dot.style-sweet{ background:#b23d6e; }
+  .chip-dot.style-rap{ background:#2a2a2a; }
+  .chip-dot.style-other{ background:#555; }
 
   .empty-msg{
     text-align:center;
@@ -305,104 +346,6 @@
     color:#333;
     margin-top:10px;
   }
-
-  /* ---------- admin edit button (visible only in admin mode) ---------- */
-  .edit-btn{
-    border:none;
-    background:rgba(255,255,255,0.6);
-    color:#333;
-    width:26px;height:26px;
-    border-radius:50%;
-    font-size:0.8rem;
-    cursor:pointer;
-    flex-shrink:0;
-    display:flex;align-items:center;justify-content:center;
-    margin-right:6px;
-  }
-  .admin-bar{
-    display:none;
-    align-items:center;
-    justify-content:space-between;
-    background:rgba(255,255,255,0.4);
-    border:1px solid rgba(255,255,255,0.5);
-    border-radius:12px;
-    padding:8px 12px;
-    font-size:0.76rem;
-    font-weight:300;
-    color:#333;
-    margin-bottom:14px;
-  }
-  .admin-bar.show{ display:flex; }
-  .admin-bar button{
-    border:none;background:transparent;color:#333;
-    text-decoration:underline;cursor:pointer;font-size:0.76rem;
-  }
-
-  /* ---------- add song form ---------- */
-  details.add-panel{ }
-  details.add-panel summary{
-    cursor:pointer;
-    list-style:none;
-    font-family:var(--display);
-    font-size:1.15rem;
-    color:var(--plum-deep);
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  details.add-panel summary::-webkit-details-marker{ display:none; }
-  details.add-panel summary::after{
-    content:"▾";
-    margin-left:auto;
-    transition:transform .2s;
-    color:var(--blush-deep);
-  }
-  details.add-panel[open] summary::after{ transform:rotate(180deg); }
-
-  .form-grid{
-    margin-top:16px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .form-grid label{
-    font-size:0.8rem;
-    color:#6e6e6e;
-    display:block;
-    margin-bottom:5px;
-  }
-  .form-grid input, .form-grid select{
-    width:100%;
-    padding:10px 12px;
-    border-radius:12px;
-    border:1px solid rgba(36,36,36,0.15);
-    font-size:0.95rem;
-    font-family:var(--body);
-    outline:none;
-    background:rgba(255,255,255,0.55);
-    color:var(--ink);
-  }
-  .form-grid input:focus, .form-grid select:focus{
-    border-color:var(--blush-deep);
-  }
-  .submit-btn{
-    border:none;
-    background:var(--plum-deep);
-    color:#fff;
-    padding:12px;
-    border-radius:12px;
-    font-family:var(--display);
-    font-size:1rem;
-    letter-spacing:1px;
-    cursor:pointer;
-  }
-  .form-msg{
-    font-size:0.82rem;
-    color:#3a3a3a;
-    font-weight:600;
-    display:none;
-  }
-  .form-msg.show{ display:block; }
 
   footer{
     text-align:center;
@@ -447,6 +390,7 @@
 <div class="wrap">
 
   <div class="hero">
+    <img class="avatar" src="avatar.jpg" alt="Ry.灰">
     <h1>Ry.灰</h1>
     <p>能和你并排走的话<br>下雨也是好天气</p>
     <div class="count-pill">当前收录 <b id="songCount">0</b> 首歌曲</div>
@@ -472,54 +416,6 @@
     <div class="random-result" id="randomResult"></div>
   </div>
 
-  <!-- 管理员专属：添加/编辑歌曲 -->
-  <div class="card" id="adminCard" style="display:none;">
-    <div class="admin-bar show">
-      <span>管理模式已开启</span>
-      <button id="adminLogoutBtn">退出</button>
-    </div>
-    <details class="add-panel">
-      <summary>学会新歌了？加进来</summary>
-      <div class="form-grid">
-        <div>
-          <label>歌名 *</label>
-          <input id="inName" type="text" placeholder="例如：小幸运">
-        </div>
-        <div>
-          <label>原唱歌手</label>
-          <input id="inArtist" type="text" placeholder="例如：田馥甄">
-        </div>
-        <div>
-          <label>风格</label>
-          <select id="inStyle">
-            <option value="流行">流行</option>
-            <option value="旋律">旋律</option>
-            <option value="古风">古风</option>
-            <option value="粤语">粤语</option>
-            <option value="歪歌">歪歌</option>
-            <option value="甜歌">甜歌</option>
-            <option value="rnb">R&B</option>
-            <option value="__custom">其他（自己填）</option>
-          </select>
-          <input id="inStyleCustom" type="text" placeholder="填写自定义风格" style="display:none;margin-top:8px;">
-        </div>
-        <div>
-          <label>语言</label>
-          <select id="inLang">
-            <option value="中文">中文</option>
-            <option value="粤语">粤语</option>
-            <option value="英语">英语</option>
-            <option value="日语">日语</option>
-            <option value="__custom">其他（自己填）</option>
-          </select>
-          <input id="inLangCustom" type="text" placeholder="填写自定义语言" style="display:none;margin-top:8px;">
-        </div>
-        <button class="submit-btn" id="addBtn">添加到歌单</button>
-        <div class="form-msg" id="formMsg">已加入歌单啦</div>
-      </div>
-    </details>
-  </div>
-
   <footer>
     huisonglist.live · Ry.灰的歌单
   </footer>
@@ -529,77 +425,55 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const BUILTIN_SONGS = [{"name": "放", "artist": "", "style": "流行", "language": "中文"}, {"name": "雨", "artist": "", "style": "流行", "language": "中文"}, {"name": "画心", "artist": "", "style": "流行", "language": "中文"}, {"name": "如愿", "artist": "", "style": "流行", "language": "中文"}, {"name": "舍得", "artist": "", "style": "流行", "language": "中文"}, {"name": "雨爱", "artist": "", "style": "流行", "language": "中文"}, {"name": "有些", "artist": "", "style": "流行", "language": "中文"}, {"name": "成全", "artist": "", "style": "流行", "language": "中文"}, {"name": "绽放", "artist": "", "style": "流行", "language": "中文"}, {"name": "抬头", "artist": "", "style": "流行", "language": "中文"}, {"name": "春泥", "artist": "", "style": "流行", "language": "中文"}, {"name": "借过", "artist": "", "style": "流行", "language": "中文"}, {"name": "勇气", "artist": "", "style": "流行", "language": "中文"}, {"name": "天下", "artist": "", "style": "流行", "language": "中文"}, {"name": "解药", "artist": "", "style": "流行", "language": "中文"}, {"name": "致你", "artist": "", "style": "流行", "language": "中文"}, {"name": "夜车", "artist": "", "style": "流行", "language": "中文"}, {"name": "妥协", "artist": "", "style": "流行", "language": "中文"}, {"name": "落空", "artist": "", "style": "流行", "language": "中文"}, {"name": "暖暖", "artist": "", "style": "流行", "language": "中文"}, {"name": "踏浪", "artist": "", "style": "流行", "language": "中文"}, {"name": "天后", "artist": "", "style": "流行", "language": "中文"}, {"name": "指纹", "artist": "", "style": "流行", "language": "中文"}, {"name": "雪藏", "artist": "", "style": "流行", "language": "中文"}, {"name": "白羊", "artist": "", "style": "流行", "language": "中文"}, {"name": "寻屿", "artist": "", "style": "流行", "language": "中文"}, {"name": "阿刁", "artist": "", "style": "流行", "language": "中文"}, {"name": "大鱼", "artist": "", "style": "流行", "language": "中文"}, {"name": "尘埃", "artist": "", "style": "流行", "language": "中文"}, {"name": "沦陷", "artist": "", "style": "流行", "language": "中文"}, {"name": "虚拟", "artist": "", "style": "流行", "language": "中文"}, {"name": "续写", "artist": "", "style": "流行", "language": "中文"}, {"name": "情歌", "artist": "", "style": "流行", "language": "中文"}, {"name": "恋人", "artist": "", "style": "流行", "language": "中文"}, {"name": "爱殇", "artist": "", "style": "流行", "language": "中文"}, {"name": "宠坏", "artist": "", "style": "流行", "language": "中文"}, {"name": "命运", "artist": "", "style": "流行", "language": "中文"}, {"name": "认错", "artist": "", "style": "流行", "language": "中文"}, {"name": "夏天", "artist": "", "style": "流行", "language": "中文"}, {"name": "火苗", "artist": "", "style": "流行", "language": "中文"}, {"name": "失控", "artist": "", "style": "流行", "language": "中文"}, {"name": "唯一", "artist": "", "style": "流行", "language": "中文"}, {"name": "善变", "artist": "", "style": "流行", "language": "中文"}, {"name": "绿洲", "artist": "", "style": "流行", "language": "中文"}, {"name": "忍住", "artist": "", "style": "流行", "language": "中文"}, {"name": "失眠", "artist": "", "style": "流行", "language": "中文"}, {"name": "听海", "artist": "", "style": "流行", "language": "中文"}, {"name": "其实", "artist": "", "style": "流行", "language": "中文"}, {"name": "泪海", "artist": "", "style": "流行", "language": "中文"}, {"name": "连麦", "artist": "", "style": "流行", "language": "中文"}, {"name": "流浪", "artist": "", "style": "流行", "language": "中文"}, {"name": "白狐", "artist": "", "style": "流行", "language": "中文"}, {"name": "青花", "artist": "", "style": "流行", "language": "中文"}, {"name": "座位", "artist": "", "style": "流行", "language": "中文"}, {"name": "冷夜", "artist": "", "style": "流行", "language": "中文"}, {"name": "复原", "artist": "", "style": "流行", "language": "中文"}, {"name": "原谅", "artist": "", "style": "流行", "language": "中文"}, {"name": "嗜好", "artist": "", "style": "流行", "language": "中文"}, {"name": "错季", "artist": "", "style": "流行", "language": "中文"}, {"name": "宿敌", "artist": "", "style": "流行", "language": "中文"}, {"name": "陨落", "artist": "", "style": "流行", "language": "中文"}, {"name": "天赋", "artist": "", "style": "流行", "language": "中文"}, {"name": "怜悯", "artist": "", "style": "流行", "language": "中文"}, {"name": "泪桥", "artist": "", "style": "流行", "language": "中文"}, {"name": "凝眸", "artist": "", "style": "流行", "language": "中文"}, {"name": "知足", "artist": "", "style": "流行", "language": "中文"}, {"name": "梦哑", "artist": "", "style": "流行", "language": "中文"}, {"name": "红豆", "artist": "", "style": "流行", "language": "中文"}, {"name": "雀跃", "artist": "", "style": "流行", "language": "中文"}, {"name": "玻璃", "artist": "", "style": "流行", "language": "中文"}, {"name": "过敏", "artist": "", "style": "流行", "language": "中文"}, {"name": "戒你", "artist": "", "style": "流行", "language": "中文"}, {"name": "不苦", "artist": "", "style": "流行", "language": "中文"}, {"name": "卜卦", "artist": "", "style": "流行", "language": "中文"}, {"name": "白鸽", "artist": "", "style": "流行", "language": "中文"}, {"name": "不如", "artist": "", "style": "流行", "language": "中文"}, {"name": "人质", "artist": "", "style": "流行", "language": "中文"}, {"name": "从前说", "artist": "", "style": "流行", "language": "中文"}, {"name": "小胡同", "artist": "", "style": "流行", "language": "中文"}, {"name": "外婆桥", "artist": "", "style": "流行", "language": "中文"}, {"name": "下雨天", "artist": "", "style": "流行", "language": "中文"}, {"name": "后继者", "artist": "", "style": "流行", "language": "中文"}, {"name": "我会等", "artist": "", "style": "流行", "language": "中文"}, {"name": "晚枫歌", "artist": "", "style": "流行", "language": "中文"}, {"name": "别错过dj", "artist": "", "style": "流行", "language": "中文"}, {"name": "热气球", "artist": "", "style": "流行", "language": "中文"}, {"name": "跳楼机", "artist": "", "style": "流行", "language": "中文"}, {"name": "疑心病", "artist": "", "style": "流行", "language": "中文"}, {"name": "独角戏", "artist": "", "style": "流行", "language": "中文"}, {"name": "我太笨", "artist": "", "style": "流行", "language": "中文"}, {"name": "太聪明", "artist": "", "style": "流行", "language": "中文"}, {"name": "在深秋", "artist": "", "style": "流行", "language": "中文"}, {"name": "麦恩莉", "artist": "", "style": "流行", "language": "中文"}, {"name": "月亮船", "artist": "", "style": "流行", "language": "中文"}, {"name": "他他他dj", "artist": "", "style": "流行", "language": "中文"}, {"name": "黑眼圈", "artist": "", "style": "流行", "language": "中文"}, {"name": "爱存在", "artist": "", "style": "流行", "language": "中文"}, {"name": "多情种", "artist": "", "style": "流行", "language": "中文"}, {"name": "向云端", "artist": "", "style": "流行", "language": "中文"}, {"name": "苏州河", "artist": "", "style": "流行", "language": "中文"}, {"name": "如果呢", "artist": "", "style": "流行", "language": "中文"}, {"name": "黄昏晓", "artist": "", "style": "流行", "language": "中文"}, {"name": "来不及", "artist": "", "style": "流行", "language": "中文"}, {"name": "我爱他", "artist": "", "style": "流行", "language": "中文"}, {"name": "记忆点", "artist": "", "style": "流行", "language": "中文"}, {"name": "后视镜", "artist": "", "style": "流行", "language": "中文"}, {"name": "同花顺", "artist": "", "style": "流行", "language": "中文"}, {"name": "我和你", "artist": "", "style": "流行", "language": "中文"}, {"name": "猜不透", "artist": "", "style": "流行", "language": "中文"}, {"name": "打火机", "artist": "", "style": "流行", "language": "中文"}, {"name": "不将就", "artist": "", "style": "流行", "language": "中文"}, {"name": "敕勒歌", "artist": "", "style": "流行", "language": "中文"}, {"name": "月牙湾", "artist": "", "style": "流行", "language": "中文"}, {"name": "半情歌", "artist": "", "style": "流行", "language": "中文"}, {"name": "读心术", "artist": "", "style": "流行", "language": "中文"}, {"name": "梦里花", "artist": "", "style": "流行", "language": "中文"}, {"name": "有我呢", "artist": "", "style": "流行", "language": "中文"}, {"name": "怎么了", "artist": "", "style": "流行", "language": "中文"}, {"name": "我知道", "artist": "", "style": "流行", "language": "中文"}, {"name": "欧若拉", "artist": "", "style": "流行", "language": "中文"}, {"name": "三国恋", "artist": "", "style": "流行", "language": "中文"}, {"name": "错的人", "artist": "", "style": "流行", "language": "中文"}, {"name": "是非题", "artist": "", "style": "流行", "language": "中文"}, {"name": "五月天", "artist": "", "style": "流行", "language": "中文"}, {"name": "云与海", "artist": "", "style": "流行", "language": "中文"}, {"name": "匆匆那年", "artist": "", "style": "流行", "language": "中文"}, {"name": "失落沙洲", "artist": "", "style": "流行", "language": "中文"}, {"name": "孤单心事", "artist": "", "style": "流行", "language": "中文"}, {"name": "特别的人", "artist": "", "style": "流行", "language": "中文"}, {"name": "假装快乐", "artist": "", "style": "流行", "language": "中文"}, {"name": "何必不舍", "artist": "", "style": "流行", "language": "中文"}, {"name": "如果可以", "artist": "", "style": "流行", "language": "中文"}, {"name": "你啊你啊", "artist": "", "style": "流行", "language": "中文"}, {"name": "最后一页", "artist": "", "style": "流行", "language": "中文"}, {"name": "知否知否", "artist": "", "style": "流行", "language": "中文"}, {"name": "从此以后", "artist": "", "style": "流行", "language": "中文"}, {"name": "同手同脚", "artist": "", "style": "流行", "language": "中文"}, {"name": "今夜有雨", "artist": "", "style": "流行", "language": "中文"}, {"name": "爱似水仙", "artist": "", "style": "流行", "language": "中文"}, {"name": "昨日青空", "artist": "", "style": "流行", "language": "中文"}, {"name": "字字句句", "artist": "", "style": "流行", "language": "中文"}, {"name": "金玉良缘", "artist": "", "style": "流行", "language": "中文"}, {"name": "爱情讯息", "artist": "", "style": "流行", "language": "中文"}, {"name": "有何不可", "artist": "", "style": "流行", "language": "中文"}, {"name": "飞云之下", "artist": "", "style": "流行", "language": "中文"}, {"name": "时间煮雨", "artist": "", "style": "流行", "language": "中文"}, {"name": "狼的诱惑", "artist": "", "style": "流行", "language": "中文"}, {"name": "三寸天堂", "artist": "", "style": "流行", "language": "中文"}, {"name": "到此为止", "artist": "", "style": "流行", "language": "中文"}, {"name": "最好的我", "artist": "", "style": "流行", "language": "中文"}, {"name": "连名带姓", "artist": "", "style": "流行", "language": "中文"}, {"name": "我好想你", "artist": "", "style": "流行", "language": "中文"}, {"name": "你想要的", "artist": "", "style": "流行", "language": "中文"}, {"name": "不再联系", "artist": "", "style": "流行", "language": "中文"}, {"name": "光的方向", "artist": "", "style": "流行", "language": "中文"}, {"name": "想你的夜", "artist": "", "style": "流行", "language": "中文"}, {"name": "好久不见", "artist": "", "style": "流行", "language": "中文"}, {"name": "甲乙丙丁", "artist": "", "style": "流行", "language": "中文"}, {"name": "淋一场雨", "artist": "", "style": "流行", "language": "中文"}, {"name": "物归原主", "artist": "", "style": "流行", "language": "中文"}, {"name": "这样爱了", "artist": "", "style": "流行", "language": "中文"}, {"name": "你在不在", "artist": "", "style": "流行", "language": "中文"}, {"name": "一点一滴", "artist": "", "style": "流行", "language": "中文"}, {"name": "拉过勾的", "artist": "", "style": "流行", "language": "中文"}, {"name": "静音恋人", "artist": "", "style": "流行", "language": "中文"}, {"name": "茶花开了", "artist": "", "style": "流行", "language": "中文"}, {"name": "就忘了吧", "artist": "", "style": "流行", "language": "中文"}, {"name": "星空物语", "artist": "", "style": "流行", "language": "中文"}, {"name": "行走的鱼", "artist": "", "style": "流行", "language": "中文"}, {"name": "落叶归根", "artist": "", "style": "流行", "language": "中文"}, {"name": "清明雨上", "artist": "", "style": "流行", "language": "中文"}, {"name": "呼吸决定", "artist": "", "style": "流行", "language": "中文"}, {"name": "下一个天亮", "artist": "", "style": "流行", "language": "中文"}, {"name": "想念拟人化", "artist": "", "style": "流行", "language": "中文"}, {"name": "下完这场雨", "artist": "", "style": "流行", "language": "中文"}, {"name": "大雨还在下", "artist": "", "style": "流行", "language": "中文"}, {"name": "揉碎夜的光", "artist": "", "style": "流行", "language": "中文"}, {"name": "你不属于我", "artist": "", "style": "流行", "language": "中文"}, {"name": "会呼吸的痛", "artist": "", "style": "流行", "language": "中文"}, {"name": "有形的翅膀", "artist": "", "style": "流行", "language": "中文"}, {"name": "隐形的翅膀", "artist": "", "style": "流行", "language": "中文"}, {"name": "在夜里跳舞", "artist": "", "style": "流行", "language": "中文"}, {"name": "想你就写信", "artist": "", "style": "流行", "language": "中文"}, {"name": "迷人的危险", "artist": "", "style": "流行", "language": "中文"}, {"name": "如果爱忘了", "artist": "", "style": "流行", "language": "中文"}, {"name": "会开花的云", "artist": "", "style": "流行", "language": "中文"}, {"name": "少一点天分", "artist": "", "style": "流行", "language": "中文"}, {"name": "遗失的美好", "artist": "", "style": "流行", "language": "中文"}, {"name": "怎么唱情歌", "artist": "", "style": "流行", "language": "中文"}, {"name": "最好的安排", "artist": "", "style": "流行", "language": "中文"}, {"name": "大手拉小手", "artist": "", "style": "流行", "language": "中文"}, {"name": "到时说爱我", "artist": "", "style": "流行", "language": "中文"}, {"name": "最初的记忆", "artist": "", "style": "流行", "language": "中文"}, {"name": "慢慢喜欢你", "artist": "", "style": "流行", "language": "中文"}, {"name": "旅行中忘记", "artist": "", "style": "流行", "language": "中文"}, {"name": "是妈妈是女儿", "artist": "", "style": "流行", "language": "中文"}, {"name": "曲终人亦散", "artist": "", "style": "流行", "language": "中文"}, {"name": "太阳与地球", "artist": "", "style": "流行", "language": "中文"}, {"name": "生生世世爱", "artist": "", "style": "流行", "language": "中文"}, {"name": "唯一的偏爱", "artist": "", "style": "流行", "language": "中文"}, {"name": "是我不够好", "artist": "", "style": "流行", "language": "中文"}, {"name": "可惜你不懂", "artist": "", "style": "流行", "language": "中文"}, {"name": "这条小鱼在乎", "artist": "", "style": "流行", "language": "中文"}, {"name": "爱情怎么喊停", "artist": "", "style": "流行", "language": "中文"}, {"name": "去北极忘记你", "artist": "", "style": "流行", "language": "中文"}, {"name": "化身孤岛的鲸", "artist": "", "style": "流行", "language": "中文"}, {"name": "夏夜最后的烟火", "artist": "", "style": "流行", "language": "中文"}, {"name": "不要忘记我爱你", "artist": "", "style": "流行", "language": "中文"}, {"name": "一个人想着一个人", "artist": "", "style": "流行", "language": "中文"}, {"name": "刻在我心底的名字", "artist": "", "style": "流行", "language": "中文"}, {"name": "离开我的依赖", "artist": "", "style": "流行", "language": "中文"}, {"name": "你就不要想起我", "artist": "", "style": "流行", "language": "中文"}, {"name": "你不知道的事", "artist": "", "style": "流行", "language": "中文"}, {"name": "阿拉斯加海湾", "artist": "", "style": "流行", "language": "中文"}, {"name": "Black Veil Bride", "artist": "", "style": "流行", "language": "中文"}, {"name": "我不可能再等你三年", "artist": "", "style": "流行", "language": "中文"}, {"name": "秋刀鱼的死期", "artist": "", "style": "流行", "language": "中文"}, {"name": "亲爱的，那不是爱情", "artist": "", "style": "流行", "language": "中文"}, {"name": "多想留在你身边", "artist": "", "style": "流行", "language": "中文"}, {"name": "那女孩对我说", "artist": "", "style": "流行", "language": "中文"}, {"name": "遇上你之前的我", "artist": "", "style": "流行", "language": "中文"}, {"name": "爱你但说不出口", "artist": "", "style": "流行", "language": "中文"}, {"name": "给未来的自己", "artist": "", "style": "流行", "language": "中文"}, {"name": "再见只是陌生人", "artist": "", "style": "流行", "language": "中文"}, {"name": "此刻最好的都在身边", "artist": "", "style": "流行", "language": "中文"}, {"name": "山茶花读不懂白玫瑰", "artist": "", "style": "流行", "language": "中文"}, {"name": "有一种悲伤", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "给我一个理由忘记", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "天若有情", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "Ps我爱你", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "无人知晓的我", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "失恋无罪", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "拿走了什么", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "幸福太短", "artist": "A-LIN", "style": "流行", "language": "中文"}, {"name": "搁浅", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "枫", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "说好不哭", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "爱你没差", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "蒲公英的约定", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "说了再见", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "我不配", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "明明就", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "红尘客栈", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "简单爱", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "发如雪", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "告白气球", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "不该", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "说好的幸福呢", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "爱情废柴", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "爱琴海", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "那天下雨了", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "我是如此相信", "artist": "周杰伦", "style": "流行", "language": "中文"}, {"name": "Always Online", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "江南", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "修炼爱情", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "可惜没如果", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "背对背拥抱", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "那些你很冒险的梦", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "关键词", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "不死之身", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "当你", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "美人鱼", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "心墙", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "达尔文", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "小酒窝", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "茉莉雨", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "爱笑的眼睛", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "曹操", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "不潮不用花钱", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "期待爱", "artist": "林俊杰", "style": "流行", "language": "中文"}, {"name": "有点甜", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "不分手的恋爱", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "像晴天像雨天", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "忽而今夏", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "年轮", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "雨天", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "等不到你", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "海绵宝宝", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "小星星", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "还给你一些孤单", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "一笑倾城", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "后会无期", "artist": "汪苏泷", "style": "流行", "language": "中文"}, {"name": "我怀念的", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "开始懂了", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "遇见", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "天黑黑", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "雨天", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "半句再见", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "愚人的国度", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "我不难过", "artist": "孙燕姿", "style": "流行", "language": "中文"}, {"name": "摆", "artist": "", "style": "旋律", "language": "中文"}, {"name": "等", "artist": "", "style": "旋律", "language": "中文"}, {"name": "coco", "artist": "", "style": "旋律", "language": "中文"}, {"name": "两难", "artist": "", "style": "旋律", "language": "中文"}, {"name": "哑谜", "artist": "", "style": "旋律", "language": "中文"}, {"name": "永恒2", "artist": "", "style": "旋律", "language": "中文"}, {"name": "碎片爱", "artist": "", "style": "旋律", "language": "中文"}, {"name": "爱止痛", "artist": "", "style": "旋律", "language": "中文"}, {"name": "海蚀崖", "artist": "", "style": "旋律", "language": "中文"}, {"name": "耻辱柱", "artist": "", "style": "旋律", "language": "中文"}, {"name": "你的目光", "artist": "", "style": "旋律", "language": "中文"}, {"name": "霓虹旅店", "artist": "", "style": "旋律", "language": "中文"}, {"name": "爱也不爱", "artist": "", "style": "旋律", "language": "中文"}, {"name": "巴咔巴咔", "artist": "", "style": "旋律", "language": "中文"}, {"name": "摸出我眼泪", "artist": "", "style": "旋律", "language": "中文"}, {"name": "漫长的季节", "artist": "", "style": "旋律", "language": "中文"}, {"name": "察觉", "artist": "", "style": "旋律", "language": "中文"}, {"name": "蠢货", "artist": "", "style": "旋律", "language": "中文"}, {"name": "爷的心禁止访问", "artist": "", "style": "旋律", "language": "中文"}, {"name": "雨越下越难听", "artist": "", "style": "旋律", "language": "中文"}, {"name": "眼泪落在沙发", "artist": "", "style": "旋律", "language": "中文"}, {"name": "熄灭", "artist": "", "style": "旋律", "language": "中文"}, {"name": "泪汪汪", "artist": "", "style": "旋律", "language": "中文"}, {"name": "天上星", "artist": "", "style": "旋律", "language": "中文"}, {"name": "算了吧", "artist": "", "style": "旋律", "language": "中文"}, {"name": "再等冬天", "artist": "", "style": "旋律", "language": "中文"}, {"name": "真心话就是大冒险", "artist": "", "style": "旋律", "language": "中文"}, {"name": "Leave Me Alone", "artist": "", "style": "旋律", "language": "中文"}, {"name": "你的crush降临了吗", "artist": "", "style": "旋律", "language": "中文"}, {"name": "forya", "artist": "", "style": "旋律", "language": "中文"}, {"name": "海屿你", "artist": "", "style": "旋律", "language": "中文"}, {"name": "下划线", "artist": "", "style": "旋律", "language": "中文"}, {"name": "噩梦", "artist": "", "style": "旋律", "language": "中文"}, {"name": "庄周梦蝶", "artist": "", "style": "旋律", "language": "中文"}, {"name": "AOEpt.2", "artist": "", "style": "旋律", "language": "中文"}, {"name": "淋透的情绪", "artist": "", "style": "旋律", "language": "中文"}, {"name": "落", "artist": "", "style": "古风", "language": "中文"}, {"name": "借月", "artist": "", "style": "古风", "language": "中文"}, {"name": "谪仙", "artist": "", "style": "古风", "language": "中文"}, {"name": "繁花", "artist": "", "style": "古风", "language": "中文"}, {"name": "万疆", "artist": "", "style": "古风", "language": "中文"}, {"name": "空心", "artist": "", "style": "古风", "language": "中文"}, {"name": "千年", "artist": "", "style": "古风", "language": "中文"}, {"name": "叹云兮", "artist": "", "style": "古风", "language": "中文"}, {"name": "壁上观", "artist": "", "style": "古风", "language": "中文"}, {"name": "桃花诺", "artist": "", "style": "古风", "language": "中文"}, {"name": "九万字", "artist": "", "style": "古风", "language": "中文"}, {"name": "牵丝戏", "artist": "", "style": "古风", "language": "中文"}, {"name": "万物生", "artist": "", "style": "古风", "language": "中文"}, {"name": "岸边客", "artist": "", "style": "古风", "language": "中文"}, {"name": "左手指月", "artist": "", "style": "古风", "language": "中文"}, {"name": "锦鲤抄", "artist": "", "style": "古风", "language": "中文"}, {"name": "苏公堤", "artist": "", "style": "古风", "language": "中文"}, {"name": "探故知", "artist": "", "style": "古风", "language": "中文"}, {"name": "春庭雪", "artist": "", "style": "古风", "language": "中文"}, {"name": "梦幻诛仙", "artist": "", "style": "古风", "language": "中文"}, {"name": "星月神话", "artist": "", "style": "古风", "language": "中文"}, {"name": "吹梦到西洲", "artist": "", "style": "古风", "language": "中文"}, {"name": "云裳羽衣曲", "artist": "", "style": "古风", "language": "中文"}, {"name": "山外小楼夜听雨", "artist": "", "style": "古风", "language": "中文"}, {"name": "不问别离", "artist": "", "style": "古风", "language": "中文"}, {"name": "盗墓笔记.十年人间", "artist": "", "style": "古风", "language": "中文"}, {"name": "晚夜微雨问海棠", "artist": "", "style": "古风", "language": "中文"}, {"name": "寂寞沙洲冷", "artist": "", "style": "古风", "language": "中文"}, {"name": "明月天涯", "artist": "", "style": "古风", "language": "中文"}, {"name": "离人愁", "artist": "", "style": "古风", "language": "中文"}, {"name": "恋人心", "artist": "", "style": "古风", "language": "中文"}, {"name": "芊芊", "artist": "", "style": "古风", "language": "中文"}, {"name": "烟雨行舟", "artist": "", "style": "古风", "language": "中文"}, {"name": "江南雪", "artist": "", "style": "古风", "language": "中文"}, {"name": "食色", "artist": "", "style": "古风", "language": "中文"}, {"name": "卜卦", "artist": "", "style": "古风", "language": "中文"}, {"name": "生死相随", "artist": "", "style": "古风", "language": "中文"}, {"name": "春涧", "artist": "", "style": "古风", "language": "中文"}, {"name": "知我", "artist": "", "style": "古风", "language": "中文"}, {"name": "劫", "artist": "", "style": "古风", "language": "中文"}, {"name": "古画", "artist": "", "style": "古风", "language": "中文"}, {"name": "寄明月", "artist": "", "style": "古风", "language": "中文"}, {"name": "长安姑娘", "artist": "", "style": "古风", "language": "中文"}, {"name": "西厢寻他", "artist": "", "style": "古风", "language": "中文"}, {"name": "离人赋", "artist": "", "style": "古风", "language": "中文"}, {"name": "青衣", "artist": "", "style": "古风", "language": "中文"}, {"name": "我本将心向明月", "artist": "", "style": "古风", "language": "中文"}, {"name": "花寂寥", "artist": "", "style": "古风", "language": "中文"}, {"name": "我恨明月不照我", "artist": "", "style": "古风", "language": "中文"}, {"name": "单车", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "孤雏", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "钟无艳", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "吴哥窟", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "好心分手", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "富士山下", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "喜帖街", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "戒不掉", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "可惜我是水瓶座", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "老派约会之必要", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "够钟", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "My Cookie Can", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "最佳损友", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "传闻", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "野孩子", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "少女的祈祷", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "一生所爱", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "零分", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "大哥", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "小城大事", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "残酷游戏", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "就算世界无童话", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "紧急联络人", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "小问题", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "续集", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "爆了", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "冷雨夜", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "k歌之王", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "我好想你", "artist": "", "style": "粤语", "language": "粤语"}, {"name": "水牛记", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "猪之歌", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "大东北", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "奇迹再现", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "猪猪侠", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "好男人都死哪去了", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "麒麟", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "性感小野猫", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "脚后跟", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "很任性", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "伤不起", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "38度6", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "火红的萨日朗", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "狼的诱惑", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "爱情买卖", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "套马杆", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "爱情专属权", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "红烧肉", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "byebye2025", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "晴天（丹尼尔）卡路里", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "荷塘月色", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "最炫名族风", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "全是爱", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "猪八戒背媳妇", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "大侠我们走", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "动感光波", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "大叔dj", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "瞎说大实话", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "歌在飞", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "伤心剖半", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "老婆最大", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "老娘驾到", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "爱情错觉", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "法图麦", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "无法原谅", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "卡路里", "artist": "", "style": "歪歌", "language": "中文"}, {"name": "大叔不要跑", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "每一句都很甜", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "就是爱你", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "99次我爱他", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "小船", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "情花", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "爱你", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "遇到", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "泡汤", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "星星", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "我们", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "坏女孩", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "勇敢爱", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "创口贴", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "日不落", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "爱一点", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "恶作剧", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "樱花草", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "浪漫爱", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "吵架歌", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "爱啦啦", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "QQ爱", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "凑热闹", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "不灵不灵", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "爱的魔法", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "想想念念", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "公主殿下", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "恋爱频率", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "爱丫爱丫", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "咖喱咖喱", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "快乐女孩", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "蹦蹦跳跳", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "粉色泡泡", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "拜托丘比特", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "心愿便利贴", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "东京不太热", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "少女作妖日记", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "我是你的小狗", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "七秒钟的记忆", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "doll", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "他的猫", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "罗曼蒂克的爱情", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "我想我不够好", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "莫名其妙爱上你", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "第57次取消发送", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "爱的双重魔力", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "要爱我", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "catch catch", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "DaDaDa", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "喜欢", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "Honey", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "第一次爱的人", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "想和你谈恋爱", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "飞机场", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "嘻唰唰", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "April Encounter", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "一千零一夜", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "鸭梨大", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "喂猪", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "哎呀", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "青柠", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "这就是爱吗", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "Deard", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "学猫叫", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "直到你降临", "artist": "", "style": "甜歌", "language": "中文"}, {"name": "宅宅爱", "artist": "", "style": "甜歌", "language": "中文"}];
-
-const STORAGE_KEY = 'huisong_custom_songs';
-
-function loadCustomSongs(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  }catch(e){ return []; }
-}
-function saveCustomSongs(list){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-}
-
-let customSongs = loadCustomSongs();
-
-const OVERRIDES_KEY = 'huisong_overrides';
-function loadOverrides(){
-  try{
-    const raw = localStorage.getItem(OVERRIDES_KEY);
-    return raw ? JSON.parse(raw) : {};
-  }catch(e){ return {}; }
-}
-function saveOverrides(obj){
-  localStorage.setItem(OVERRIDES_KEY, JSON.stringify(obj));
-}
-let overrides = loadOverrides();
-
-// ---------- 管理模式 ----------
-// 访问网址后面加上 #admin 并输入密码即可开启管理模式，可在此处修改密码
-const ADMIN_KEY = 'ryhui2025';
-const ADMIN_FLAG = 'ry_is_admin';
-let isAdmin = localStorage.getItem(ADMIN_FLAG) === '1';
-
-function tryUnlockAdmin(){
-  if(location.hash === '#admin'){
-    const input = prompt('请输入管理密码');
-    if(input === ADMIN_KEY){
-      localStorage.setItem(ADMIN_FLAG, '1');
-      isAdmin = true;
-    }
-    history.replaceState(null, '', location.pathname + location.search);
-  }
-}
-tryUnlockAdmin();
-
-function editSong(s){
-  const newArtist = prompt(`修改「${s.name}」的原唱歌手：`, s.artist || '');
-  if(newArtist === null) return;
-  if(s._idx !== undefined){
-    overrides[s._idx] = Object.assign({}, overrides[s._idx], { artist: newArtist.trim() });
-    saveOverrides(overrides);
-  } else if(s._cidx !== undefined){
-    customSongs[s._cidx].artist = newArtist.trim();
-    saveCustomSongs(customSongs);
-  }
-  renderList();
-  showToast('已更新歌手信息');
-}
+let BUILTIN_SONGS = [{"name": "放", "artist": "我是土豆", "style": "流行", "style2": "旋律"}, {"name": "雨", "artist": "江辰", "style": "流行", "style2": "旋律/说唱"}, {"name": "画心", "artist": "张靓颖", "style": "流行", "style2": ""}, {"name": "如愿", "artist": "王菲", "style": "流行", "style2": ""}, {"name": "舍得", "artist": "王唯旖", "style": "流行", "style2": ""}, {"name": "雨爱", "artist": "杨丞琳", "style": "流行", "style2": ""}, {"name": "有些", "artist": "颜人中", "style": "流行", "style2": ""}, {"name": "成全", "artist": "林宥嘉", "style": "流行", "style2": ""}, {"name": "绽放", "artist": "郑润泽", "style": "流行", "style2": ""}, {"name": "抬头", "artist": "ZERONE/焦阿琳/康熙", "style": "流行", "style2": ""}, {"name": "春泥", "artist": "庾澄庆", "style": "流行", "style2": ""}, {"name": "借过", "artist": "印子月", "style": "流行", "style2": ""}, {"name": "勇气", "artist": "梁静茹", "style": "流行", "style2": ""}, {"name": "天下", "artist": "张杰", "style": "流行", "style2": ""}, {"name": "解药", "artist": "孙兵兵", "style": "流行", "style2": ""}, {"name": "致你", "artist": "yihuik苡慧", "style": "流行", "style2": ""}, {"name": "夜车", "artist": "曾轶可", "style": "流行", "style2": ""}, {"name": "妥协", "artist": "蔡依林", "style": "流行", "style2": ""}, {"name": "落空", "artist": "印子月", "style": "流行", "style2": ""}, {"name": "暖暖", "artist": "梁静茹", "style": "流行", "style2": ""}, {"name": "踏浪", "artist": "卓依婷", "style": "流行", "style2": ""}, {"name": "天后", "artist": "陈势安", "style": "流行", "style2": ""}, {"name": "指纹", "artist": "杜宣达", "style": "流行", "style2": ""}, {"name": "雪藏", "artist": "呆呆破", "style": "流行", "style2": ""}, {"name": "白羊", "artist": "徐秉龙/沈以诚", "style": "流行", "style2": ""}, {"name": "寻屿", "artist": "阿YueYue", "style": "流行", "style2": ""}, {"name": "阿刁", "artist": "张韶涵", "style": "流行", "style2": ""}, {"name": "大鱼", "artist": "周深", "style": "流行", "style2": ""}, {"name": "尘埃", "artist": "家家", "style": "流行", "style2": ""}, {"name": "沦陷", "artist": "王靖雯", "style": "流行", "style2": ""}, {"name": "虚拟", "artist": "陈粒", "style": "流行", "style2": ""}, {"name": "续写", "artist": "单依纯", "style": "流行", "style2": ""}, {"name": "情歌", "artist": "梁静茹", "style": "流行", "style2": ""}, {"name": "恋人", "artist": "李荣浩", "style": "流行", "style2": ""}, {"name": "爱殇", "artist": "小时姑娘", "style": "流行", "style2": ""}, {"name": "宠坏", "artist": "潘柚彤/李俊佑", "style": "流行", "style2": ""}, {"name": "命运", "artist": "家家", "style": "流行", "style2": ""}, {"name": "认错", "artist": "许嵩", "style": "流行", "style2": ""}, {"name": "夏天", "artist": "刘瑞琦", "style": "流行", "style2": ""}, {"name": "火苗", "artist": "格格", "style": "流行", "style2": ""}, {"name": "失控", "artist": "井迪", "style": "流行", "style2": ""}, {"name": "唯一", "artist": "G.E.M.邓紫棋", "style": "流行", "style2": ""}, {"name": "善变", "artist": "王靖雯", "style": "流行", "style2": ""}, {"name": "绿洲", "artist": "徐佳莹", "style": "流行", "style2": ""}, {"name": "忍住", "artist": "司马缸砸光", "style": "流行", "style2": ""}, {"name": "失眠", "artist": "Suki刘舒妤", "style": "流行", "style2": ""}, {"name": "听海", "artist": "张惠妹", "style": "流行", "style2": ""}, {"name": "其实", "artist": "薛之谦", "style": "流行", "style2": ""}, {"name": "泪海", "artist": "江辰", "style": "流行", "style2": ""}, {"name": "连麦", "artist": "江辰", "style": "流行", "style2": ""}, {"name": "流浪", "artist": "江辰", "style": "流行", "style2": ""}, {"name": "白狐", "artist": "陈瑞", "style": "流行", "style2": ""}, {"name": "青花", "artist": "周传雄", "style": "流行", "style2": ""}, {"name": "座位", "artist": "于冬然", "style": "流行", "style2": ""}, {"name": "冷夜", "artist": "陈默之", "style": "流行", "style2": ""}, {"name": "复原", "artist": "张泽历", "style": "流行", "style2": ""}, {"name": "原谅", "artist": "刘瑞琦", "style": "流行", "style2": ""}, {"name": "嗜好", "artist": "颜人中", "style": "流行", "style2": ""}, {"name": "错季", "artist": "秋原依", "style": "流行", "style2": ""}, {"name": "宿敌", "artist": "许嵩", "style": "流行", "style2": ""}, {"name": "陨落", "artist": "不是花火呀", "style": "流行", "style2": ""}, {"name": "天赋", "artist": "唐嫣/罗晋", "style": "流行", "style2": ""}, {"name": "怜悯", "artist": "周深", "style": "流行", "style2": ""}, {"name": "泪桥", "artist": "伍佰", "style": "流行", "style2": ""}, {"name": "凝眸", "artist": "王心凌", "style": "流行", "style2": ""}, {"name": "知足", "artist": "五月天", "style": "流行", "style2": ""}, {"name": "梦哑", "artist": "任然", "style": "流行", "style2": ""}, {"name": "红豆", "artist": "王菲", "style": "流行", "style2": ""}, {"name": "雀跃", "artist": "任然", "style": "流行", "style2": ""}, {"name": "玻璃", "artist": "Gareth.T", "style": "流行", "style2": ""}, {"name": "过敏", "artist": "杨丞琳", "style": "流行", "style2": ""}, {"name": "戒你", "artist": "陶心瑶", "style": "流行", "style2": ""}, {"name": "不苦", "artist": "鞠婧祎", "style": "流行", "style2": ""}, {"name": "卜卦", "artist": "崔子格", "style": "流行", "style2": ""}, {"name": "白鸽", "artist": "你的上好佳", "style": "流行", "style2": ""}, {"name": "不如", "artist": "秦海清", "style": "流行", "style2": ""}, {"name": "人质", "artist": "张惠妹", "style": "流行", "style2": ""}, {"name": "从前说", "artist": "小阿七", "style": "流行", "style2": ""}, {"name": "小胡同", "artist": "郑润泽", "style": "流行", "style2": ""}, {"name": "外婆桥", "artist": "任然", "style": "流行", "style2": ""}, {"name": "下雨天", "artist": "南拳妈妈", "style": "流行", "style2": ""}, {"name": "后继者", "artist": "任然", "style": "流行", "style2": ""}, {"name": "我会等", "artist": "承桓", "style": "流行", "style2": ""}, {"name": "晚枫歌", "artist": "孟子坤", "style": "流行", "style2": ""}, {"name": "别错过dj", "artist": "程佳佳", "style": "流行", "style2": ""}, {"name": "热气球", "artist": "黄淑惠", "style": "流行", "style2": ""}, {"name": "跳楼机", "artist": "LBI利比（时柏尘）", "style": "流行", "style2": ""}, {"name": "疑心病", "artist": "任然", "style": "流行", "style2": ""}, {"name": "独角戏", "artist": "许茹芸", "style": "流行", "style2": ""}, {"name": "我太笨", "artist": "锤娜丽莎", "style": "流行", "style2": ""}, {"name": "太聪明", "artist": "陈绮贞", "style": "流行", "style2": ""}, {"name": "在深秋", "artist": "阿悄", "style": "流行", "style2": ""}, {"name": "麦恩莉", "artist": "方大同", "style": "流行", "style2": ""}, {"name": "月亮船", "artist": "王英姿", "style": "流行", "style2": ""}, {"name": "他他他dj", "artist": "艾辰", "style": "流行", "style2": ""}, {"name": "黑眼圈", "artist": "江辰", "style": "流行", "style2": ""}, {"name": "爱存在", "artist": "魏奇奇", "style": "流行", "style2": ""}, {"name": "多情种", "artist": "胡杨林", "style": "流行", "style2": ""}, {"name": "向云端", "artist": "黄绮珊", "style": "流行", "style2": ""}, {"name": "苏州河", "artist": "薛凯琪", "style": "流行", "style2": ""}, {"name": "如果呢", "artist": "郑润泽", "style": "流行", "style2": ""}, {"name": "黄昏晓", "artist": "王心凌", "style": "流行", "style2": ""}, {"name": "来不及", "artist": "刘瑞琦", "style": "流行", "style2": ""}, {"name": "我爱他", "artist": "郑润泽", "style": "流行", "style2": ""}, {"name": "记忆点", "artist": "陈卓璇", "style": "流行", "style2": ""}, {"name": "后视镜", "artist": "罗言RollFlash", "style": "流行", "style2": ""}, {"name": "同花顺", "artist": "林倛玉", "style": "流行", "style2": ""}, {"name": "我和你", "artist": "唐宁", "style": "流行", "style2": ""}, {"name": "猜不透", "artist": "丁当", "style": "流行", "style2": ""}, {"name": "打火机", "artist": "Penny", "style": "流行", "style2": ""}, {"name": "不将就", "artist": "李荣浩", "style": "流行", "style2": ""}, {"name": "敕勒歌", "artist": "谭维维", "style": "流行", "style2": ""}, {"name": "月牙湾", "artist": "F.I.R.飞儿乐团", "style": "流行", "style2": ""}, {"name": "半情歌", "artist": "元若蓝", "style": "流行", "style2": ""}, {"name": "读心术", "artist": "卓文萱", "style": "流行", "style2": ""}, {"name": "梦里花", "artist": "张韶涵", "style": "流行", "style2": ""}, {"name": "有我呢", "artist": "郭一凡", "style": "流行", "style2": ""}, {"name": "怎么了", "artist": "Eric周兴哲", "style": "流行", "style2": ""}, {"name": "我知道", "artist": "BY2", "style": "流行", "style2": ""}, {"name": "欧若拉", "artist": "张韶涵", "style": "流行", "style2": ""}, {"name": "三国恋", "artist": "Tank", "style": "流行", "style2": ""}, {"name": "错的人", "artist": "萧亚轩", "style": "流行", "style2": ""}, {"name": "是非题", "artist": "范玮琪", "style": "流行", "style2": ""}, {"name": "五月天", "artist": "SHE", "style": "流行", "style2": ""}, {"name": "云与海", "artist": "阿YueYue", "style": "流行", "style2": ""}, {"name": "匆匆那年", "artist": "王菲", "style": "流行", "style2": ""}, {"name": "失落沙洲", "artist": "徐佳莹", "style": "流行", "style2": ""}, {"name": "孤单心事", "artist": "颜人中", "style": "流行", "style2": ""}, {"name": "特别的人", "artist": "方大同", "style": "流行", "style2": ""}, {"name": "假装快乐", "artist": "呆呆破", "style": "流行", "style2": ""}, {"name": "何必不舍", "artist": "呆呆破", "style": "流行", "style2": ""}, {"name": "如果可以", "artist": "韦礼安", "style": "流行", "style2": ""}, {"name": "你啊你啊", "artist": "魏如萱", "style": "流行", "style2": ""}, {"name": "最后一页", "artist": "江语晨", "style": "流行", "style2": ""}, {"name": "知否知否", "artist": "郁可唯", "style": "流行", "style2": ""}, {"name": "从此以后", "artist": "虎皮蛋", "style": "流行", "style2": ""}, {"name": "同手同脚", "artist": "林宜融", "style": "流行", "style2": ""}, {"name": "今夜有雨", "artist": "h3r3", "style": "流行", "style2": ""}, {"name": "爱似水仙", "artist": "金海心", "style": "流行", "style2": ""}, {"name": "昨日青空", "artist": "尤长靖", "style": "流行", "style2": ""}, {"name": "字字句句", "artist": "卢卢快闭嘴", "style": "流行", "style2": ""}, {"name": "金玉良缘", "artist": "李琦", "style": "流行", "style2": ""}, {"name": "爱情讯息", "artist": "郭静", "style": "流行", "style2": ""}, {"name": "有何不可", "artist": "有何不可", "style": "流行", "style2": ""}, {"name": "飞云之下", "artist": "韩红 / 林俊杰", "style": "流行", "style2": ""}, {"name": "时间煮雨", "artist": "郁可唯", "style": "流行", "style2": ""}, {"name": "三寸天堂", "artist": "严艺丹 / 赵志刚", "style": "流行", "style2": ""}, {"name": "到此为止", "artist": "徐佳莹", "style": "流行", "style2": ""}, {"name": "最好的我", "artist": "房祖名/龚芝怡", "style": "流行", "style2": ""}, {"name": "连名带姓", "artist": "张惠妹", "style": "流行", "style2": ""}, {"name": "我好想你", "artist": "苏立生", "style": "流行", "style2": ""}, {"name": "我好想你", "artist": "苏打绿", "style": "流行", "style2": ""}, {"name": "你想要的", "artist": "颜人中", "style": "流行", "style2": ""}, {"name": "不再联系", "artist": "夏天Alex", "style": "流行", "style2": ""}, {"name": "光的方向", "artist": "张碧晨", "style": "流行", "style2": ""}, {"name": "想你的夜", "artist": "关喆", "style": "流行", "style2": ""}, {"name": "好久不见", "artist": "陈奕迅", "style": "流行", "style2": ""}, {"name": "甲乙丙丁", "artist": "李佳薇", "style": "流行", "style2": ""}, {"name": "淋一场雨", "artist": "LBI利比（时柏尘）", "style": "流行", "style2": ""}, {"name": "物归原主", "artist": "蓝辛蕊Cariny", "style": "流行", "style2": ""}, {"name": "这样爱了", "artist": "张婧", "style": "流行", "style2": ""}, {"name": "你在不在", "artist": "郭采洁", "style": "流行", "style2": ""}, {"name": "一点一滴", "artist": "林倛玉", "style": "流行", "style2": ""}, {"name": "拉过勾的", "artist": "陆虎", "style": "流行", "style2": ""}, {"name": "静音恋人", "artist": "礼越", "style": "流行", "style2": ""}, {"name": "茶花开了", "artist": "王睿卓", "style": "流行", "style2": ""}, {"name": "就忘了吧", "artist": "1K", "style": "流行", "style2": ""}, {"name": "星空物语", "artist": "张翰/魏晨/朱梓骁/俞灏明", "style": "流行", "style2": ""}, {"name": "行走的鱼", "artist": "徐佳莹", "style": "流行", "style2": ""}, {"name": "落叶归根", "artist": "王力宏", "style": "流行", "style2": ""}, {"name": "清明雨上", "artist": "许嵩", "style": "流行", "style2": ""}, {"name": "呼吸决定", "artist": "Fine乐团", "style": "流行", "style2": ""}, {"name": "下一个天亮", "artist": "郭静", "style": "流行", "style2": ""}, {"name": "想念拟人化", "artist": "孟慧圆", "style": "流行", "style2": ""}, {"name": "下完这场雨", "artist": "后弦", "style": "流行", "style2": ""}, {"name": "大雨还在下", "artist": "1个球", "style": "流行", "style2": ""}, {"name": "揉碎夜的光", "artist": "代诗琪", "style": "流行", "style2": ""}, {"name": "你不属于我", "artist": "Eric周兴哲", "style": "流行", "style2": ""}, {"name": "会呼吸的痛", "artist": "梁静茹", "style": "流行", "style2": ""}, {"name": "有形的翅膀", "artist": "张韶涵", "style": "流行", "style2": ""}, {"name": "隐形的翅膀", "artist": "张韶涵", "style": "流行", "style2": ""}, {"name": "在夜里跳舞", "artist": "单依纯", "style": "流行", "style2": ""}, {"name": "想你就写信", "artist": "曹杨", "style": "流行", "style2": ""}, {"name": "迷人的危险", "artist": "Dance Flow", "style": "流行", "style2": ""}, {"name": "如果爱忘了", "artist": "戚薇", "style": "流行", "style2": ""}, {"name": "会开花的云", "artist": "姚晓棠", "style": "流行", "style2": ""}, {"name": "少一点天分", "artist": "孙盛希", "style": "流行", "style2": ""}, {"name": "遗失的美好", "artist": "张韶涵", "style": "流行", "style2": ""}, {"name": "怎么唱情歌", "artist": "刘惜君", "style": "流行", "style2": ""}, {"name": "最好的安排", "artist": "曲婉婷", "style": "流行", "style2": ""}, {"name": "大手拉小手", "artist": "梁静茹", "style": "流行", "style2": ""}, {"name": "到时说爱我", "artist": "茜拉 (Shila Amzah)", "style": "流行", "style2": ""}, {"name": "最初的记忆", "artist": "徐佳莹", "style": "流行", "style2": ""}, {"name": "慢慢喜欢你", "artist": "莫文蔚", "style": "流行", "style2": ""}, {"name": "旅行中忘记", "artist": "袁娅维TIA RAY", "style": "流行", "style2": ""}, {"name": "是妈妈是女儿", "artist": "黄绮珊/希林娜依高", "style": "流行", "style2": ""}, {"name": "曲终人亦散", "artist": "en (王翊恩)", "style": "流行", "style2": ""}, {"name": "太阳与地球", "artist": "卢广仲", "style": "流行", "style2": ""}, {"name": "生生世世爱", "artist": "吴雨霏", "style": "流行", "style2": ""}, {"name": "唯一的偏爱", "artist": "en (王翊恩)", "style": "流行", "style2": ""}, {"name": "是我不够好", "artist": "李毓芬", "style": "流行", "style2": ""}, {"name": "可惜你不懂", "artist": "王琪玮", "style": "流行", "style2": ""}, {"name": "这条小鱼在乎", "artist": "王OK/洪佩瑜", "style": "流行", "style2": ""}, {"name": "爱情怎么喊停", "artist": "曾沛慈", "style": "流行", "style2": ""}, {"name": "去北极忘记你", "artist": "Gareth.T", "style": "流行", "style2": ""}, {"name": "化身孤岛的鲸", "artist": "周深", "style": "流行", "style2": ""}, {"name": "夏夜最后的烟火", "artist": "颜人中", "style": "流行", "style2": ""}, {"name": "不要忘记我爱你", "artist": "张碧晨", "style": "流行", "style2": ""}, {"name": "一个人想着一个人", "artist": "曾沛慈", "style": "流行", "style2": ""}, {"name": "刻在我心底的名字", "artist": "卢广仲", "style": "流行", "style2": ""}, {"name": "离开我的依赖", "artist": "王艳薇", "style": "流行", "style2": ""}, {"name": "你就不要想起我", "artist": "田馥甄", "style": "流行", "style2": ""}, {"name": "你不知道的事", "artist": "王力宏", "style": "流行", "style2": ""}, {"name": "阿拉斯加海湾", "artist": "蓝心羽", "style": "流行", "style2": ""}, {"name": "Black Veil Bride", "artist": "Rosy赵露思", "style": "流行", "style2": ""}, {"name": "我不可能再等你三年", "artist": "Hush不乖_/Crybird", "style": "流行", "style2": ""}, {"name": "秋刀鱼的死期", "artist": "LBI利比（时柏尘）", "style": "流行", "style2": ""}, {"name": "亲爱的，那不是爱情", "artist": "张韶涵", "style": "流行", "style2": ""}, {"name": "多想留在你身边", "artist": "刘增瞳", "style": "流行", "style2": ""}, {"name": "那女孩对我说", "artist": "黄义达", "style": "流行", "style2": ""}, {"name": "遇上你之前的我", "artist": "Gareth.T", "style": "流行", "style2": ""}, {"name": "爱你但说不出口", "artist": "Karencici", "style": "流行", "style2": ""}, {"name": "给未来的自己", "artist": "梁静茹", "style": "流行", "style2": ""}, {"name": "再见只是陌生人", "artist": "庄心妍", "style": "流行", "style2": ""}, {"name": "此刻最好的都在身边", "artist": "丁祾", "style": "流行", "style2": ""}, {"name": "山茶花读不懂白玫瑰", "artist": "梨笑笑", "style": "流行", "style2": ""}, {"name": "有一种悲伤", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "给我一个理由忘记", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "天若有情", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "Ps我爱你", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "无人知晓的我", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "失恋无罪", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "拿走了什么", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "幸福太短", "artist": "A-LIN", "style": "流行", "style2": ""}, {"name": "搁浅", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "枫", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "说好不哭", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "爱你没差", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "蒲公英的约定", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "说了再见", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "我不配", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "明明就", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "红尘客栈", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "简单爱", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "发如雪", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "告白气球", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "不该", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "说好的幸福呢", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "爱情废柴", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "爱琴海", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "那天下雨了", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "我是如此相信", "artist": "周杰伦", "style": "流行", "style2": ""}, {"name": "Always Online", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "江南", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "修炼爱情", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "可惜没如果", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "背对背拥抱", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "那些你很冒险的梦", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "关键词", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "不死之身", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "当你", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "美人鱼", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "心墙", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "达尔文", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "小酒窝", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "茉莉雨", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "爱笑的眼睛", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "曹操", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "不潮不用花钱", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "期待爱", "artist": "林俊杰", "style": "流行", "style2": ""}, {"name": "有点甜", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "不分手的恋爱", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "像晴天像雨天", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "忽而今夏", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "年轮", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "雨天", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "等不到你", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "海绵宝宝", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "小星星", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "还给你一些孤单", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "一笑倾城", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "后会无期", "artist": "汪苏泷", "style": "流行", "style2": ""}, {"name": "我怀念的", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "开始懂了", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "遇见", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "天黑黑", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "雨天", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "半句再见", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "愚人的国度", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "我不难过", "artist": "孙燕姿", "style": "流行", "style2": ""}, {"name": "摆", "artist": "TC", "style": "旋律", "style2": ""}, {"name": "等", "artist": "TC", "style": "旋律", "style2": "说唱"}, {"name": "coco", "artist": "侃迪kandi", "style": "旋律", "style2": "说唱"}, {"name": "两难", "artist": "加木", "style": "旋律", "style2": "说唱"}, {"name": "哑谜", "artist": "张黎", "style": "旋律", "style2": ""}, {"name": "永恒2", "artist": "Tlatre特雷西 / 1CEKary艾斯凯瑞", "style": "旋律", "style2": "说唱"}, {"name": "碎片爱", "artist": "太帅了花", "style": "旋律", "style2": "说唱"}, {"name": "爱止痛", "artist": "JinJiBeWater_隼", "style": "旋律", "style2": "说唱"}, {"name": "海蚀崖", "artist": "沧桑Cang333", "style": "旋律", "style2": "说唱"}, {"name": "耻辱柱", "artist": "刘思鉴", "style": "旋律", "style2": ""}, {"name": "你的目光", "artist": "Alec Benjamin", "style": "旋律", "style2": ""}, {"name": "霓虹旅店", "artist": "Kc", "style": "旋律", "style2": ""}, {"name": "爱也不爱", "artist": "刘思鉴", "style": "旋律", "style2": "R&B"}, {"name": "巴咔巴咔", "artist": "谣君", "style": "旋律", "style2": "甜歌"}, {"name": "摸出我眼泪", "artist": "Tlatre特雷西", "style": "旋律", "style2": "朋克"}, {"name": "漫长的季节", "artist": "连麻Swimming/RICHNOMADIC", "style": "旋律", "style2": "说唱"}, {"name": "察觉", "artist": "TC", "style": "旋律", "style2": ""}, {"name": "蠢货", "artist": "喻言", "style": "旋律", "style2": "流行"}, {"name": "爷的心禁止访问", "artist": "Copy/别网恋", "style": "旋律", "style2": "说唱"}, {"name": "雨越下越难听", "artist": "Aioz", "style": "旋律", "style2": "R&B"}, {"name": "眼泪落在沙发", "artist": "王子明/Uniko姜宁", "style": "旋律", "style2": "流行/说唱"}, {"name": "熄灭", "artist": "TC", "style": "旋律", "style2": "流行"}, {"name": "泪汪汪", "artist": "YangYang/Aioz", "style": "旋律", "style2": "流行"}, {"name": "天上星", "artist": "生生SurvivaL/PAN", "style": "旋律", "style2": "说唱"}, {"name": "算了吧", "artist": "Aioz/张天枢/刘思达", "style": "旋律", "style2": "流行"}, {"name": "再等冬天", "artist": "h3R3", "style": "旋律", "style2": "流行/说唱"}, {"name": "真心话就是大冒险", "artist": "张方钊", "style": "旋律", "style2": "说唱"}, {"name": "Leave Me Alone", "artist": "TC", "style": "旋律", "style2": ""}, {"name": "你的crush降临了吗", "artist": "歪歪超", "style": "旋律", "style2": ""}, {"name": "forya", "artist": "蒋小呢", "style": "旋律", "style2": ""}, {"name": "海屿你", "artist": "马也_Crabbit", "style": "旋律", "style2": ""}, {"name": "下划线", "artist": "SASIOVERLXRD", "style": "旋律", "style2": "说唱"}, {"name": "噩梦", "artist": "TizzyT", "style": "旋律", "style2": "说唱"}, {"name": "庄周梦蝶", "artist": "Ice Paper", "style": "旋律", "style2": "说唱/古风"}, {"name": "AOEpt.2", "artist": "DD Ma Shawty/BOBBYNOPEACE/LusciousBB", "style": "旋律", "style2": "说唱"}, {"name": "淋透的情绪", "artist": "邓亦宇", "style": "旋律", "style2": "说唱"}, {"name": "空心", "artist": "光泽", "style": "古风", "style2": ""}, {"name": "第57次取消发送", "artist": "菲菲公主", "style": "甜歌", "style2": ""}, {"name": "第一次爱的人", "artist": "王心凌", "style": "甜歌", "style2": ""}, {"name": "落", "artist": "唐伯虎Annie", "style": "古风", "style2": ""}, {"name": "借月", "artist": "王天阳", "style": "古风", "style2": ""}, {"name": "谪仙", "artist": "纳米", "style": "古风", "style2": ""}, {"name": "繁花", "artist": "董真", "style": "古风", "style2": ""}, {"name": "万疆", "artist": "李玉刚", "style": "古风", "style2": ""}, {"name": "千年", "artist": "阿YueYue", "style": "古风", "style2": ""}, {"name": "叹云兮", "artist": "鞠婧祎", "style": "古风", "style2": ""}, {"name": "壁上观", "artist": "鞠婧祎", "style": "古风", "style2": ""}, {"name": "桃花诺", "artist": "邓紫棋", "style": "古风", "style2": ""}, {"name": "九万字", "artist": "黄诗扶", "style": "古风", "style2": ""}, {"name": "牵丝戏", "artist": "银临/Aki阿杰", "style": "古风", "style2": ""}, {"name": "万物生", "artist": "萨顶顶", "style": "古风", "style2": ""}, {"name": "岸边客", "artist": "夏子航（2603）", "style": "古风", "style2": ""}, {"name": "左手指月", "artist": "萨顶顶", "style": "古风", "style2": ""}, {"name": "锦鲤抄", "artist": "银临 / 云之泣", "style": "古风", "style2": ""}, {"name": "苏公堤", "artist": "杨一歌", "style": "古风", "style2": ""}, {"name": "探故知", "artist": "浅影阿/汐音社", "style": "古风", "style2": ""}, {"name": "春庭雪", "artist": "邓寓君(等什么君)", "style": "古风", "style2": ""}, {"name": "梦幻诛仙", "artist": "汪苏泷", "style": "古风", "style2": ""}, {"name": "星月神话", "artist": "金莎", "style": "古风", "style2": ""}, {"name": "吹梦到西洲", "artist": "黄诗扶/妖扬", "style": "古风", "style2": ""}, {"name": "云裳羽衣曲", "artist": "周深", "style": "古风", "style2": ""}, {"name": "山外小楼夜听雨", "artist": "任然", "style": "古风", "style2": ""}, {"name": "不问别离", "artist": "指尖笑", "style": "古风", "style2": ""}, {"name": "盗墓笔记.十年人间", "artist": "李常超（Lao乾妈）", "style": "古风", "style2": ""}, {"name": "晚夜微雨问海棠", "artist": "镜予歌/喧笑/陈亦洺", "style": "古风", "style2": ""}, {"name": "寂寞沙洲冷", "artist": "周传雄", "style": "古风", "style2": ""}, {"name": "明月天涯", "artist": "五音Jw", "style": "古风", "style2": ""}, {"name": "离人愁", "artist": "李袁杰", "style": "古风", "style2": ""}, {"name": "恋人心", "artist": "魏新雨", "style": "古风", "style2": ""}, {"name": "芊芊", "artist": "阿YueYue", "style": "古风", "style2": ""}, {"name": "烟雨行舟", "artist": "司南", "style": "古风", "style2": ""}, {"name": "江南雪", "artist": "礼越", "style": "古风", "style2": ""}, {"name": "食色", "artist": "音阙诗听/林清弄", "style": "古风", "style2": ""}, {"name": "卜卦", "artist": "崔子格", "style": "古风", "style2": ""}, {"name": "生死相随", "artist": "崔子格", "style": "古风", "style2": ""}, {"name": "春涧", "artist": "浅影阿", "style": "古风", "style2": ""}, {"name": "知我", "artist": "国风堂/哦漏", "style": "古风", "style2": ""}, {"name": "劫", "artist": "音频怪物", "style": "古风", "style2": ""}, {"name": "古画", "artist": "鞠婧祎", "style": "古风", "style2": ""}, {"name": "寄明月", "artist": "SING女团", "style": "古风", "style2": ""}, {"name": "长安姑娘", "artist": "李常超（Lao乾妈）", "style": "古风", "style2": ""}, {"name": "西厢寻他", "artist": "伯爵Johnny/唐伯虎Annie", "style": "古风", "style2": ""}, {"name": "离人赋", "artist": "云汐", "style": "古风", "style2": ""}, {"name": "青衣", "artist": "尘ah.", "style": "古风", "style2": ""}, {"name": "我本将心向明月", "artist": "王朝1982 / 朱旭BooBoo", "style": "古风", "style2": ""}, {"name": "花寂寥", "artist": "橡木", "style": "古风", "style2": ""}, {"name": "我恨明月不照我", "artist": "阿YueYue", "style": "古风", "style2": ""}, {"name": "单车", "artist": "陈奕迅", "style": "粤语", "style2": ""}, {"name": "孤雏", "artist": "AGA", "style": "粤语", "style2": ""}, {"name": "钟无艳", "artist": "谢安琪", "style": "粤语", "style2": ""}, {"name": "吴哥窟", "artist": "吴雨霏", "style": "粤语", "style2": ""}, {"name": "好心分手", "artist": "王力宏/卢巧音", "style": "粤语", "style2": ""}, {"name": "富士山下", "artist": "陈奕迅", "style": "粤语", "style2": ""}, {"name": "喜帖街", "artist": "谢安琪", "style": "粤语", "style2": ""}, {"name": "戒不掉", "artist": "欧阳耀莹", "style": "粤语", "style2": ""}, {"name": "可惜我是水瓶座", "artist": "杨千嬅", "style": "粤语", "style2": ""}, {"name": "老派约会之必要", "artist": "MC 张天赋", "style": "粤语", "style2": ""}, {"name": "够钟", "artist": "周柏豪", "style": "粤语", "style2": ""}, {"name": "My Cookie Can", "artist": "卫兰", "style": "粤语", "style2": ""}, {"name": "街灯晚餐", "artist": "卫兰", "style": "粤语", "style2": ""}, {"name": "最佳损友", "artist": "陈奕迅", "style": "粤语", "style2": ""}, {"name": "传闻", "artist": "周柏豪", "style": "粤语", "style2": ""}, {"name": "野孩子", "artist": "杨千嬅", "style": "粤语", "style2": ""}, {"name": "少女的祈祷", "artist": "杨千嬅", "style": "粤语", "style2": ""}, {"name": "一生所爱", "artist": "莫文蔚", "style": "粤语", "style2": ""}, {"name": "零分", "artist": "JUDE曾若华", "style": "粤语", "style2": ""}, {"name": "大哥", "artist": "卫兰", "style": "粤语", "style2": ""}, {"name": "小城大事", "artist": "杨千嬅", "style": "粤语", "style2": ""}, {"name": "残酷游戏", "artist": "卫兰", "style": "粤语", "style2": ""}, {"name": "就算世界无童话", "artist": "卫兰", "style": "粤语", "style2": ""}, {"name": "紧急联络人", "artist": "Gareth.T", "style": "粤语", "style2": ""}, {"name": "小问题", "artist": "AGA", "style": "粤语", "style2": ""}, {"name": "续集", "artist": "容祖儿", "style": "粤语", "style2": ""}, {"name": "爆了", "artist": "古巨基", "style": "粤语", "style2": ""}, {"name": "冷雨夜", "artist": "BEYOND", "style": "粤语", "style2": ""}, {"name": "k歌之王", "artist": "陈奕迅", "style": "粤语", "style2": ""}, {"name": "我好想你", "artist": "王菀之", "style": "粤语", "style2": ""}, {"name": "水牛记", "artist": "郭顶", "style": "歪歌", "style2": ""}, {"name": "猪之歌", "artist": "香香", "style": "歪歌", "style2": ""}, {"name": "大东北我的家乡", "artist": "何玉", "style": "歪歌", "style2": ""}, {"name": "奇迹再现", "artist": "毛华锋", "style": "歪歌", "style2": ""}, {"name": "猪猪侠", "artist": "陈洁丽", "style": "歪歌", "style2": ""}, {"name": "好男人都死哪去了", "artist": "崔子格", "style": "歪歌", "style2": ""}, {"name": "麒麟", "artist": "早安", "style": "歪歌", "style2": ""}, {"name": "性感小野猫", "artist": "岑雨橋", "style": "歪歌", "style2": ""}, {"name": "脚后跟的皴等着谁来搓", "artist": "武圣迪", "style": "歪歌", "style2": ""}, {"name": "很任性", "artist": "千百顺", "style": "歪歌", "style2": ""}, {"name": "伤不起", "artist": "王麟", "style": "歪歌", "style2": ""}, {"name": "38度6", "artist": "黑龙", "style": "歪歌", "style2": ""}, {"name": "火红的萨日朗", "artist": "乌兰托娅", "style": "歪歌", "style2": ""}, {"name": "狼的诱惑", "artist": "凤凰传奇", "style": "歪歌", "style2": ""}, {"name": "爱情买卖", "artist": "慕容晓晓", "style": "歪歌", "style2": ""}, {"name": "套马杆", "artist": "乌兰托娅", "style": "歪歌", "style2": ""}, {"name": "爱情专属权", "artist": "龙梅子", "style": "歪歌", "style2": ""}, {"name": "红烧肉", "artist": "王蓉", "style": "歪歌", "style2": ""}, {"name": "byebye2025", "artist": "Jiaber吴伯滔/Zeho傅子豪", "style": "歪歌", "style2": ""}, {"name": "丹尼尔在的晴天", "artist": "丹尼尔辛巴巴/鸡夫斯基", "style": "歪歌", "style2": ""}, {"name": "卡路里", "artist": "火箭少女101", "style": "歪歌", "style2": ""}, {"name": "荷塘月色", "artist": "凤凰传奇", "style": "歪歌", "style2": ""}, {"name": "最炫名族风", "artist": "凤凰传奇", "style": "歪歌", "style2": ""}, {"name": "全是爱", "artist": "凤凰传奇", "style": "歪歌", "style2": ""}, {"name": "猪八戒背媳妇", "artist": "许镜清", "style": "歪歌", "style2": ""}, {"name": "大侠我们走", "artist": "十二律音乐联盟", "style": "歪歌", "style2": ""}, {"name": "动感光波", "artist": "萧全", "style": "歪歌", "style2": ""}, {"name": "大叔dj", "artist": "白雪淞", "style": "歪歌", "style2": ""}, {"name": "瞎说大实话", "artist": "陈燚燚", "style": "歪歌", "style2": ""}, {"name": "歌在飞", "artist": "苏勒亚其其格", "style": "歪歌", "style2": ""}, {"name": "伤心剖半", "artist": "邓典", "style": "歪歌", "style2": ""}, {"name": "老婆最大", "artist": "崔子格/老猫", "style": "歪歌", "style2": ""}, {"name": "老娘驾到", "artist": "小黄飞", "style": "歪歌", "style2": ""}, {"name": "爱情错觉", "artist": "王娅", "style": "歪歌", "style2": ""}, {"name": "法图麦", "artist": "穆言", "style": "歪歌", "style2": ""}, {"name": "无法原谅", "artist": "李佳璐", "style": "歪歌", "style2": ""}, {"name": "嘻唰唰", "artist": "花儿乐队", "style": "甜歌", "style2": ""}, {"name": "鸭梨大", "artist": "至上励合", "style": "甜歌", "style2": ""}, {"name": "哎呀", "artist": "王蓉", "style": "甜歌", "style2": ""}, {"name": "大叔不要跑", "artist": "胡艾彤", "style": "甜歌", "style2": ""}, {"name": "每一句都很甜", "artist": "薄荷er", "style": "甜歌", "style2": ""}, {"name": "就是爱你", "artist": "yihuik苡慧", "style": "甜歌", "style2": ""}, {"name": "99次我爱他", "artist": "元若蓝", "style": "甜歌", "style2": ""}, {"name": "小船", "artist": "163braces", "style": "甜歌", "style2": ""}, {"name": "情花", "artist": "本兮", "style": "甜歌", "style2": ""}, {"name": "爱你", "artist": "王心凌", "style": "甜歌", "style2": ""}, {"name": "遇到", "artist": "颜人中", "style": "甜歌", "style2": ""}, {"name": "泡汤", "artist": "花玲", "style": "甜歌", "style2": ""}, {"name": "星星", "artist": "牛奶咖啡", "style": "甜歌", "style2": ""}, {"name": "我们", "artist": "乐柠组合", "style": "甜歌", "style2": ""}, {"name": "坏女孩", "artist": "徐良/小凌", "style": "甜歌", "style2": ""}, {"name": "勇敢爱", "artist": "Mi2", "style": "甜歌", "style2": ""}, {"name": "创口贴", "artist": "999PUNKSTA", "style": "甜歌", "style2": ""}, {"name": "日不落", "artist": "蔡依林", "style": "甜歌", "style2": ""}, {"name": "爱一点", "artist": "莫艳琳", "style": "甜歌", "style2": ""}, {"name": "恶作剧", "artist": "林依晨", "style": "甜歌", "style2": ""}, {"name": "樱花草", "artist": "Sweety", "style": "甜歌", "style2": ""}, {"name": "浪漫爱", "artist": "刘瑞琦", "style": "甜歌", "style2": ""}, {"name": "吵架歌", "artist": "汪苏泷/Hari", "style": "甜歌", "style2": ""}, {"name": "爱啦啦", "artist": "海楠", "style": "甜歌", "style2": ""}, {"name": "QQ爱", "artist": "孙辉/蓝若兮", "style": "甜歌", "style2": ""}, {"name": "凑热闹", "artist": "By2", "style": "甜歌", "style2": ""}, {"name": "不灵不灵", "artist": "很美味", "style": "甜歌", "style2": ""}, {"name": "爱的魔法", "artist": "金莎", "style": "甜歌", "style2": ""}, {"name": "想想念念", "artist": "锦零", "style": "甜歌", "style2": ""}, {"name": "公主殿下", "artist": "崔洋", "style": "甜歌", "style2": ""}, {"name": "恋爱频率", "artist": "Sasablue", "style": "甜歌", "style2": ""}, {"name": "爱丫爱丫", "artist": "By2", "style": "甜歌", "style2": ""}, {"name": "咖喱咖喱", "artist": "牛奶咖啡", "style": "甜歌", "style2": ""}, {"name": "快乐女孩", "artist": "刘惜君", "style": "甜歌", "style2": ""}, {"name": "蹦蹦跳跳", "artist": "李昕融/付佳钰", "style": "甜歌", "style2": ""}, {"name": "粉色泡泡", "artist": "布酱栗猫", "style": "甜歌", "style2": ""}, {"name": "拜托丘比特", "artist": "Sasablue", "style": "甜歌", "style2": ""}, {"name": "心愿便利贴", "artist": "元若蓝/大Q秉洛", "style": "甜歌", "style2": ""}, {"name": "东京不太热", "artist": "封茗囧菌", "style": "甜歌", "style2": ""}, {"name": "少女作妖日记", "artist": "纳豆nado", "style": "甜歌", "style2": ""}, {"name": "我是你的小狗", "artist": "西彬", "style": "甜歌", "style2": ""}, {"name": "七秒钟的记忆", "artist": "徐良/孙羽幽", "style": "甜歌", "style2": ""}, {"name": "doll", "artist": "小雪", "style": "甜歌", "style2": ""}, {"name": "喜欢", "artist": "阿肆", "style": "甜歌", "style2": ""}, {"name": "他的猫", "artist": "徐良/杨曦", "style": "甜歌", "style2": ""}, {"name": "罗曼蒂克的爱情", "artist": "贺敬轩", "style": "甜歌", "style2": ""}, {"name": "我想我不够好", "artist": "单循", "style": "甜歌", "style2": ""}, {"name": "莫名其妙爱上你", "artist": "朱主爱", "style": "甜歌", "style2": ""}, {"name": "爱的双重魔力", "artist": "By2", "style": "甜歌", "style2": ""}, {"name": "要爱我", "artist": "南偿/袁雨桐/葡陌", "style": "甜歌", "style2": ""}, {"name": "catch catch", "artist": "YENA Kpop", "style": "甜歌", "style2": ""}, {"name": "DaDaDa", "artist": "王心凌", "style": "甜歌", "style2": ""}, {"name": "Honey", "artist": "王心凌", "style": "甜歌", "style2": ""}, {"name": "想和你谈恋爱", "artist": "欧阳尚尚/海青", "style": "甜歌", "style2": ""}, {"name": "飞机场", "artist": "徐良/小凌", "style": "甜歌", "style2": ""}, {"name": "April Encounter", "artist": "很美味", "style": "甜歌", "style2": ""}, {"name": "一千零一夜", "artist": "刘美麟", "style": "甜歌", "style2": ""}, {"name": "喂猪", "artist": "MJ耶", "style": "甜歌", "style2": ""}, {"name": "青柠", "artist": "徐秉龙/桃十五", "style": "甜歌", "style2": ""}, {"name": "这就是爱吗？", "artist": "容祖儿", "style": "甜歌", "style2": ""}, {"name": "Dear D", "artist": "项睿娴", "style": "甜歌", "style2": ""}, {"name": "学猫叫", "artist": "潘柚彤/陈峰", "style": "甜歌", "style2": ""}, {"name": "直到你降临", "artist": "阿肆", "style": "甜歌", "style2": ""}, {"name": "宅宅爱", "artist": "不要杀死我的爱/zhaiiovo", "style": "甜歌", "style2": "说唱"}];
 
 function allSongs(){
-  const builtin = BUILTIN_SONGS.map((s, i) => {
-    const ov = overrides[i];
-    return ov ? Object.assign({}, s, ov, { _idx: i }) : Object.assign({}, s, { _idx: i });
+  return BUILTIN_SONGS;
+}
+
+// ---------- 按歌名拼音顺序排序（辅以字数长短） ----------
+let pinyinCollator = null;
+try{
+  pinyinCollator = new Intl.Collator('zh-Hans-CN-u-co-pinyin');
+}catch(e){ pinyinCollator = null; }
+
+function sortSongs(list){
+  const arr = list.slice();
+  arr.sort((a, b) => {
+    // 歪歌永远排在最后
+    const aBottom = a.style === '歪歌' ? 1 : 0;
+    const bBottom = b.style === '歪歌' ? 1 : 0;
+    if(aBottom !== bBottom) return aBottom - bBottom;
+
+    // 按字数长短排列（一个字、两个字...）
+    const lenDiff = a.name.length - b.name.length;
+    if(lenDiff !== 0) return lenDiff;
+
+    // 字数相同时按拼音（字母）顺序排列
+    if(pinyinCollator){
+      const c = pinyinCollator.compare(a.name, b.name);
+      if(c !== 0) return c;
+    }
+    return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0);
   });
-  const custom = customSongs.map((s, i) => Object.assign({}, s, { _cidx: i }));
-  return builtin.concat(custom);
+  return arr;
 }
 
 let activeStyle = '全部';
 let searchTerm = '';
+
+function styleColorClass(styleName){
+  const map = {
+    '流行': 'style-pop',
+    '旋律': 'style-melody',
+    '古风': 'style-ancient',
+    '粤语': 'style-canto',
+    '歪歌': 'style-novelty',
+    '甜歌': 'style-sweet',
+    '说唱': 'style-rap'
+  };
+  return map[styleName] || 'style-other';
+}
 
 const songListEl = document.getElementById('songList');
 const resultCountEl = document.getElementById('resultCount');
@@ -619,7 +493,14 @@ function renderChips(){
   styles.forEach(st => {
     const chip = document.createElement('div');
     chip.className = 'chip' + (st === activeStyle ? ' active' : '');
-    chip.textContent = st;
+    if(st === '全部'){
+      chip.textContent = st;
+    } else {
+      const dot = document.createElement('span');
+      dot.className = 'chip-dot ' + styleColorClass(st);
+      chip.appendChild(dot);
+      chip.appendChild(document.createTextNode(st));
+    }
     chip.onclick = () => { activeStyle = st; renderChips(); renderList(); };
     chipsEl.appendChild(chip);
   });
@@ -641,7 +522,7 @@ function renderList(){
 
   songListEl.innerHTML = '';
 
-  const showList = list;
+  const showList = sortSongs(list);
 
   if(list.length === 0){
     songListEl.innerHTML = '<li class="empty-msg">暂时还没有这首歌</li>';
@@ -653,24 +534,16 @@ function renderList(){
     const li = document.createElement('li');
     li.className = 'song-item';
     li.innerHTML = `
-      ${isAdmin ? '<button class="edit-btn" type="button">✎</button>' : ''}
       <div class="info">
         <div class="sname">${escapeHtml(s.name)}</div>
         <div class="sartist">${escapeHtml(s.artist || '歌手待补充')}</div>
       </div>
       <div class="stags">
-        <span>${escapeHtml(s.style || '未分类')}</span>
-        <span class="lang">${escapeHtml(s.language || '中文')}</span>
+        <span class="${styleColorClass(s.style)}">${escapeHtml(s.style || '未分类')}</span>
+        ${s.style2 ? `<span class="style2tag ${styleColorClass(s.style2)}">${escapeHtml(s.style2)}</span>` : ''}
       </div>
     `;
     li.addEventListener('click', () => copySongName(s.name));
-    if(isAdmin){
-      const editBtn = li.querySelector('.edit-btn');
-      editBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        editSong(s);
-      });
-    }
     songListEl.appendChild(li);
   });
 
@@ -737,8 +610,8 @@ randomBtn.addEventListener('click', () => {
     <div class="rname">${escapeHtml(song.name)}</div>
     <div class="rmeta">${escapeHtml(song.artist || '歌手待补充')}</div>
     <div>
-      <span class="tag">${escapeHtml(song.style || '未分类')}</span>
-      <span class="tag">${escapeHtml(song.language || '中文')}</span>
+      <span class="tag ${styleColorClass(song.style)}">${escapeHtml(song.style || '未分类')}</span>
+      ${song.style2 ? `<span class="tag ${styleColorClass(song.style2)}">${escapeHtml(song.style2)}</span>` : ''}
     </div>
   `;
   randomResult.style.cursor = 'pointer';
@@ -746,68 +619,38 @@ randomBtn.addEventListener('click', () => {
   randomResult.classList.add('show');
 });
 
-// ---------- 添加新歌 ----------
-const inStyle = document.getElementById('inStyle');
-const inStyleCustom = document.getElementById('inStyleCustom');
-const inLang = document.getElementById('inLang');
-const inLangCustom = document.getElementById('inLangCustom');
-
-inStyle.addEventListener('change', () => {
-  inStyleCustom.style.display = inStyle.value === '__custom' ? 'block' : 'none';
-});
-inLang.addEventListener('change', () => {
-  inLangCustom.style.display = inLang.value === '__custom' ? 'block' : 'none';
-});
-
-document.getElementById('addBtn').addEventListener('click', () => {
-  const name = document.getElementById('inName').value.trim();
-  const artist = document.getElementById('inArtist').value.trim();
-  const style = inStyle.value === '__custom' ? inStyleCustom.value.trim() : inStyle.value;
-  const language = inLang.value === '__custom' ? inLangCustom.value.trim() : inLang.value;
-  const msg = document.getElementById('formMsg');
-
-  if(!name){
-    msg.textContent = '歌名不能是空的哦～';
-    msg.style.color = '#333333';
-    msg.classList.add('show');
-    return;
+// ---------- 从 songs.xlsx 自动加载歌单（可选，找不到就用内置数据） ----------
+async function loadSongsFromExcel(){
+  try{
+    const resp = await fetch('songs.xlsx', { cache: 'no-store' });
+    if(!resp.ok) return false;
+    const buf = await resp.arrayBuffer();
+    if(typeof XLSX === 'undefined') return false;
+    const wb = XLSX.read(buf, { type: 'array' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+    if(!rows || rows.length === 0) return false;
+    const parsed = rows.map(r => ({
+      name: String(r['歌名'] || '').trim(),
+      artist: String(r['歌手'] || '').trim(),
+      style: String(r['风格'] || '').trim() || '未分类',
+      style2: String(r['风格2'] || '').trim()
+    })).filter(s => s.name);
+    if(parsed.length === 0) return false;
+    BUILTIN_SONGS = parsed;
+    return true;
+  }catch(e){
+    return false;
   }
-
-  customSongs.push({ name, artist, style: style || '未分类', language: language || '中文' });
-  saveCustomSongs(customSongs);
-
-  document.getElementById('inName').value = '';
-  document.getElementById('inArtist').value = '';
-  inStyle.value = '流行';
-  inLang.value = '中文';
-  inStyleCustom.style.display = 'none';
-  inLangCustom.style.display = 'none';
-  inStyleCustom.value = '';
-  inLangCustom.value = '';
-
-  msg.textContent = '已加入歌单啦';
-  msg.style.color = '#333333';
-  msg.classList.add('show');
-  setTimeout(() => msg.classList.remove('show'), 2200);
-
-  renderChips();
-  renderList();
-  document.getElementById('songCount').textContent = allSongs().length;
-});
+}
 
 // ---------- 初始化 ----------
-document.getElementById('adminCard').style.display = isAdmin ? 'block' : 'none';
-document.getElementById('adminLogoutBtn').addEventListener('click', () => {
-  localStorage.removeItem(ADMIN_FLAG);
-  isAdmin = false;
-  document.getElementById('adminCard').style.display = 'none';
+(async function init(){
+  await loadSongsFromExcel();
+  document.getElementById('songCount').textContent = allSongs().length;
+  renderChips();
   renderList();
-  showToast('已退出管理模式');
-});
-
-document.getElementById('songCount').textContent = allSongs().length;
-renderChips();
-renderList();
+})();
 </script>
 
 </body>
