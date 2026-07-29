@@ -483,7 +483,12 @@ const clearBtn = document.getElementById('clearBtn');
 
 function getStyleList(){
   const set = new Set();
-  allSongs().forEach(s => { if(s.style) set.add(s.style); });
+  allSongs().forEach(s => {
+    if(s.style) set.add(s.style);
+    if(s.style2){
+      s.style2.split('/').forEach(t => { if(t.trim()) set.add(t.trim()); });
+    }
+  });
   return ['全部', ...Array.from(set)];
 }
 
@@ -517,10 +522,14 @@ function renderList(){
   const term = searchTerm;
   let list = allSongs().filter(s => matches(s, term));
   if(activeStyle !== '全部'){
-    list = list.filter(s => s.style === activeStyle);
+    list = list.filter(s =>
+      s.style === activeStyle ||
+      (s.style2 && s.style2.split('/').map(t => t.trim()).includes(activeStyle))
+    );
   }
 
   songListEl.innerHTML = '';
+  songListEl.scrollTop = 0;
 
   const showList = sortSongs(list);
 
@@ -633,9 +642,10 @@ async function loadSongsFromExcel(){
     const parsed = rows.map(r => ({
       name: String(r['歌名'] || '').trim(),
       artist: String(r['歌手'] || '').trim(),
-      style: String(r['风格'] || '').trim() || '未分类',
+      style: String(r['风格'] || '').trim(),
       style2: String(r['风格2'] || '').trim()
-    })).filter(s => s.name);
+    })).filter(s => s.name && (s.artist || s.style || s.style2))
+      .map(s => ({ ...s, style: s.style || '未分类' }));
     if(parsed.length === 0) return false;
     BUILTIN_SONGS = parsed;
     return true;
