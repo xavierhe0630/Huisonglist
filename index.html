@@ -64,7 +64,7 @@
   .hero{
     text-align:center;
     color:var(--cream);
-    padding:10px 0 22px;
+    padding:14px 0 26px;
   }
   .hero .avatar{
     width:88px;
@@ -73,13 +73,13 @@
     object-fit:cover;
     border:2px solid rgba(255,255,255,0.75);
     box-shadow:0 6px 22px rgba(0,0,0,0.45);
-    margin-bottom:14px;
+    margin-bottom:16px;
   }
   .hero h1{
     font-family:var(--display);
     font-weight:600;
     font-size:2.2rem;
-    margin:0 0 12px;
+    margin:0 0 14px;
     letter-spacing:4px;
     text-shadow:0 2px 14px rgba(0,0,0,0.45);
   }
@@ -102,14 +102,14 @@
     display:inline-flex;
     align-items:center;
     gap:6px;
-    margin-top:16px;
-    background:rgba(255,255,255,0.16);
-    border:1px solid var(--line);
+    margin-top:22px;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.28);
     backdrop-filter:blur(10px);
     -webkit-backdrop-filter:blur(10px);
-    padding:7px 18px;
+    padding:6px 16px;
     border-radius:999px;
-    font-size:0.82rem;
+    font-size:0.78rem;
     font-weight:300;
     color:var(--cream);
   }
@@ -483,12 +483,7 @@ const clearBtn = document.getElementById('clearBtn');
 
 function getStyleList(){
   const set = new Set();
-  allSongs().forEach(s => {
-    if(s.style) set.add(s.style);
-    if(s.style2){
-      s.style2.split('/').forEach(t => { if(t.trim()) set.add(t.trim()); });
-    }
-  });
+  allSongs().forEach(s => { if(s.style) set.add(s.style); });
   return ['全部', ...Array.from(set)];
 }
 
@@ -522,10 +517,7 @@ function renderList(){
   const term = searchTerm;
   let list = allSongs().filter(s => matches(s, term));
   if(activeStyle !== '全部'){
-    list = list.filter(s =>
-      s.style === activeStyle ||
-      (s.style2 && s.style2.split('/').map(t => t.trim()).includes(activeStyle))
-    );
+    list = list.filter(s => s.style === activeStyle);
   }
 
   songListEl.innerHTML = '';
